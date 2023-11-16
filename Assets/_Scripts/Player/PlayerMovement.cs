@@ -1,21 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : SerializedMonoBehaviour
 {
-    PlayerInputs inputs = new PlayerInputs();
+    [SerializeField] private Rigidbody2D _rb;
+    [SerializeField] private float _tempMovementSpeed;
+    [SerializeField] private Vector2 _movementVector = Vector2.zero;
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-
+        PlayerInputManager.OnMovementInput += OnMovementInput;
+    }
+    private void OnDisable()
+    {
+        PlayerInputManager.OnMovementInput -= OnMovementInput;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        
+        _rb.velocity = _movementVector * _tempMovementSpeed;
     }
-    
+
+    private void OnMovementInput(Vector2 movementVector)
+    {
+        _movementVector = movementVector;
+    }
 }
